@@ -1,0 +1,159 @@
+#include <stdio.h> 
+
+#include <conio.h> 
+
+int main()
+
+{
+
+int n, rss, fa[20], rsa[50], ta[20]; //n-No_of_Frames
+
+//rss->Reference_String_Size::fa->Frame_Array
+
+//rsa->Reference_String_Array::ta->Temporary_Array 
+
+int i,j,k, d,pfc=0,npf, cp,ff=0;
+
+//d-distance[How soon a page will be used again?]
+
+//cp->Current_Position :: ff->Frames_Filled ::pfc->Page_Fault_Count
+
+//npf:NO_Page_Faults [0-False, 1-True] 
+
+printf("Enter number of frames: "); 
+
+scanf("%d", &n);
+
+printf("Enter number of pages in reference string: "); 
+
+scanf("%d", &rss);
+
+printf("Enter Reference string:\n"); 
+
+for(i=0; i<rss; i++)
+
+scanf("%d",&rsa[i]); 
+
+for(i=0;i<n;i++)
+
+{
+
+fa[i]=-1; 
+
+ta[i]=999;
+
+}
+
+printf("\nCURRENT_PAGE\t\tPAGES_IN_FRAME\t\tPAGE_FAULT_OCCURED?\n"
+
+);
+
+for(i=0; i<rss; i++)
+
+{
+
+printf("\n\t%d\t\t",rsa[i]); 
+
+npf=0;
+
+for(j=0;j<n;j++) //Checking for the page in FRAME ARRAY
+
+{
+
+if(fa[j]==rsa[i])
+
+{
+
+npf = 1; 
+
+printf("\t\t\t\tNO"); 
+
+break;
+
+}
+
+}
+
+if(npf==0) // if page fault occurs
+
+{
+
+pfc++; 
+
+if(ff<n)
+
+{
+
+fa[ff]=rsa[i]; 
+
+ff++;
+
+}
+
+else
+
+{
+
+for(k=0;k<n;k++) 
+
+ta[k]=999;
+
+for(k=0; k<n; k++) //finding how near a page is
+
+{
+
+ d = 0; // d-> distance 
+
+for(j=i+1;j<rss;j++)
+
+{
+
+if(fa[k]==rsa[j])
+
+{
+
+ta[k]=d; 
+
+break;
+
+}
+
+else
+
+d++;
+
+}
+
+}
+
+cp=0; 
+
+for(j=1;j<n;j++)
+
+{
+
+if(ta[cp]<ta[j])
+
+cp=j; //cp->current position
+
+}
+
+fa[cp] = rsa[i];
+
+}
+
+for(j=0;j<n;j++) 
+
+printf("%d\t",fa[j]);
+
+printf("\tYES");
+
+}
+
+}
+
+printf("\nTotal no of pagefaults: %d",pfc); 
+
+return 0;
+
+}
